@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nickimpact.gts.GTS;
 import com.nickimpact.gts.GTSInfo;
+import com.nickimpact.gts.api.events.PurchaseEvent;
 import com.nickimpact.gts.api.listings.entries.EntryHolder;
 import com.nickimpact.gts.api.listings.entries.Minable;
 import com.nickimpact.gts.api.listings.pricing.*;
@@ -321,6 +322,16 @@ public class ListingUtils {
 		Price price = listing.getEntry().getPrice();
 	    try {
 		    if(price.canPay(player)) {
+
+				PurchaseEvent purchaseEvent = new PurchaseEvent(
+						player,
+						listing,
+						Sponge.getCauseStackManager().getCurrentCause()
+				);
+				if (Sponge.getEventManager().post(purchaseEvent)) {
+					return;
+				}
+
 		    	if(!listing.getEntry().giveEntry(player)) {
 		    	    return;
 			    }

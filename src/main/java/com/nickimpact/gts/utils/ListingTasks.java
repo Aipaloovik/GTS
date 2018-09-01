@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.nickimpact.gts.GTS;
 import com.nickimpact.gts.GTSInfo;
+import com.nickimpact.gts.api.events.ExpireEvent;
 import com.nickimpact.gts.api.listings.Listing;
 import com.nickimpact.gts.api.listings.data.AuctionData;
 import com.nickimpact.gts.configuration.ConfigKeys;
@@ -76,7 +77,13 @@ public class ListingTasks {
 	            }
 
 	            if(successful) {
-	        		ListingUtils.deleteEntry(listing);
+					ExpireEvent expireEvent = new ExpireEvent(
+							listing,
+							Sponge.getCauseStackManager().getCurrentCause()
+					);
+					if (!Sponge.getEventManager().post(expireEvent)) {
+						ListingUtils.deleteEntry(listing);
+					}
 	            }
             });
 
