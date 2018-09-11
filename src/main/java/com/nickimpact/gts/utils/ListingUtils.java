@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nickimpact.gts.GTS;
 import com.nickimpact.gts.GTSInfo;
+import com.nickimpact.gts.api.events.PostListEvent;
 import com.nickimpact.gts.api.events.PurchaseEvent;
 import com.nickimpact.gts.api.listings.entries.EntryHolder;
 import com.nickimpact.gts.api.listings.entries.Minable;
@@ -81,6 +82,13 @@ public class ListingUtils {
 			for(Player pl : players) {
 				pl.sendMessages(broadcast);
 			}
+
+			PostListEvent postListEvent = new PostListEvent(
+					null,
+					listing,
+					Sponge.getCauseStackManager().getCurrentCause()
+			);
+			Sponge.getEventManager().post(postListEvent);
 
 			GTS.getInstance().getDiscordNotifier().ifPresent(notifier -> {
 				Message message = notifier.forgeMessage(GTS.getInstance().getConfig().get(ConfigKeys.DISCORD_NEW_LISTING), "&7A &a{{listing_specifics}} &7has been added to the GTS for &a{{price}}&7!");
@@ -263,6 +271,13 @@ public class ListingUtils {
 		    for(Player pl : players) {
 			    pl.sendMessages(broadcast);
 		    }
+
+			PostListEvent postListEvent = new PostListEvent(
+					player,
+					listing,
+					Sponge.getCauseStackManager().getCurrentCause()
+			);
+			Sponge.getEventManager().post(postListEvent);
 
 		    final Text b;
 		    try {

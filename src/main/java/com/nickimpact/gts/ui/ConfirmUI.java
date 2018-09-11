@@ -3,6 +3,7 @@ package com.nickimpact.gts.ui;
 import com.google.common.collect.Maps;
 import com.nickimpact.gts.GTS;
 import com.nickimpact.gts.GTSInfo;
+import com.nickimpact.gts.api.events.RemoveEvent;
 import com.nickimpact.gts.api.listings.Listing;
 import com.nickimpact.gts.configuration.ConfigKeys;
 import com.nickimpact.gts.configuration.MsgConfigKeys;
@@ -16,6 +17,7 @@ import com.nickimpact.impactor.gui.v2.Icon;
 import com.nickimpact.impactor.gui.v2.Layout;
 import com.nickimpact.impactor.gui.v2.UI;
 import io.github.nucleuspowered.nucleus.api.exceptions.NucleusException;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
@@ -144,6 +146,14 @@ public class ConfirmUI implements Displayable, Observer {
 				);
 				return;
 			}
+
+			RemoveEvent removeEvent = new RemoveEvent(
+					clickable.getPlayer(),
+					this.target,
+					Sponge.getCauseStackManager().getCurrentCause()
+			);
+			Sponge.getEventManager().post(removeEvent);
+
 			this.target.getEntry().giveEntry(clickable.getPlayer());
 			ListingUtils.deleteEntry(this.target);
 			try {
